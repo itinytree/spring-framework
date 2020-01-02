@@ -81,6 +81,9 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 	 * @param configLocation file path
 	 * @throws BeansException if context creation failed
 	 */
+	/**
+	 * 这个构造函数的configLocation包含的是BeanDefinition所在的文件路径
+	 */
 	public FileSystemXmlApplicationContext(String configLocation) throws BeansException {
 		this(new String[] {configLocation}, true, null);
 	}
@@ -90,6 +93,9 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 	 * from the given XML files and automatically refreshing the context.
 	 * @param configLocations array of file paths
 	 * @throws BeansException if context creation failed
+	 */
+	/**
+	 * 这个构造函数允许configLocation包含多个BeanDefinition的文件路径
 	 */
 	public FileSystemXmlApplicationContext(String... configLocations) throws BeansException {
 		this(configLocations, true, null);
@@ -102,6 +108,9 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 	 * @param configLocations array of file paths
 	 * @param parent the parent context
 	 * @throws BeansException if context creation failed
+	 */
+	/**
+	 * 这个构造函数允许configLocation包含多个BeanDefinition的文件路径的同时,还允许指定自己的双亲IOC容器
 	 */
 	public FileSystemXmlApplicationContext(String[] configLocations, ApplicationContext parent) throws BeansException {
 		this(configLocations, true, parent);
@@ -132,12 +141,16 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 	 * @throws BeansException if context creation failed
 	 * @see #refresh()
 	 */
+	/**
+	 * 在对象的初始化过程中,调用refresh函数载入BeanDefinition,这个refresh启动了BeanDefinition的载入过程
+	 */
 	public FileSystemXmlApplicationContext(
 			String[] configLocations, boolean refresh, @Nullable ApplicationContext parent)
 			throws BeansException {
 
 		super(parent);
 		setConfigLocations(configLocations);
+		// 这里调用容器的refresh,是载入BeanDefinition的入口
 		if (refresh) {
 			refresh();
 		}
@@ -152,6 +165,11 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 	 * @param path path to the resource
 	 * @return the Resource handle
 	 * @see org.springframework.web.context.support.XmlWebApplicationContext#getResourceByPath
+	 */
+	/**
+	 * 这是应用于文件系统中Resource的实现,通过构造一个FileSystemResource来得到一个在文件系统中定位的BeanDefinition
+	 * 这个getResourceByPath是在BeanDefinitionReader的loadBeanDefinition中被调用的
+	 * loadBeanDefinition采用了模板模式,具体的定位实现实际上是由各个子类来完成的
 	 */
 	@Override
 	protected Resource getResourceByPath(String path) {
