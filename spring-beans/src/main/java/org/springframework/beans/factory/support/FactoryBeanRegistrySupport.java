@@ -168,6 +168,7 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 				}
 			}
 			else {
+				// 这里调用factory的getObject方法来从FactoryBean中得到Bean
 				object = factory.getObject();
 			}
 		}

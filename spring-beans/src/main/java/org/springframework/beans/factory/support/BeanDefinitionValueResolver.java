@@ -199,6 +199,7 @@ class BeanDefinitionValueResolver {
 			});
 			return copy;
 		}
+		// 这里对TypedStringValue进行解析
 		else if (value instanceof TypedStringValue) {
 			// Convert value to target type here.
 			TypedStringValue typedStringValue = (TypedStringValue) value;
@@ -301,8 +302,10 @@ class BeanDefinitionValueResolver {
 	@Nullable
 	private Object resolveReference(Object argName, RuntimeBeanReference ref) {
 		try {
+			// 从RuntimeBeanReference取得reference的类型,这个RuntimeBeanReference是在载入BeanDefinition时根据配置生成的
 			Object bean;
 			Class<?> beanType = ref.getBeanType();
+			// 如果ref是在双亲IOC容器中,那就到双亲IOC容器中去获取
 			if (ref.isToParent()) {
 				BeanFactory parent = this.beanFactory.getParentBeanFactory();
 				if (parent == null) {
@@ -326,6 +329,7 @@ class BeanDefinitionValueResolver {
 					resolvedName = namedBean.getBeanName();
 				}
 				else {
+					// 在当前IOC容器中去获取Bean,这里会触发一个getBean的过程,如果依赖注入没有发生,这里会触发相应的依赖注入的发生
 					resolvedName = String.valueOf(doEvaluate(ref.getBeanName()));
 					bean = this.beanFactory.getBean(resolvedName);
 				}
